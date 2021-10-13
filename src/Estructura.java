@@ -10,8 +10,6 @@ public class Estructura implements IContainer<Estructura>{
     
     public Estructura(int n){
         this.n = n;
-        this.fila = 1;
-        this.columna = 1;
     }
     
     public enum IteratorType{
@@ -25,7 +23,7 @@ public class Estructura implements IContainer<Estructura>{
             case Diagonal:
                 return new Diagonal(this);
             case DiagonalInvertida:
-                return new DiagonalInvertida();
+                return new DiagonalInvertida(this);
             case PorFilas:
                 return new PorFilas();
             case PorColumnas:
@@ -53,6 +51,8 @@ public class Estructura implements IContainer<Estructura>{
         
         public Diagonal(Estructura strcuture) {
             this.structure = strcuture;
+            structure.fila = 1;
+            structure.columna = 1;
         }
                                  
         @Override                    
@@ -80,28 +80,39 @@ public class Estructura implements IContainer<Estructura>{
     }
     
         private class DiagonalInvertida implements IIterator<Estructura> {
-        
-        public DiagonalInvertida() {               
-        }
-                                 
-        
-        @Override                    
-        public boolean hasNext() {                        
-            return false;
-        }
-        
-        @Override                    
-        public Estructura next() {
-            return null;
-        }                
+            Estructura structure;
+            
+            public DiagonalInvertida(Estructura structure) {
+                this.structure = structure;
+                structure.fila = 1;
+                structure.columna = structure.n;
+            }
 
-        @Override
-        public void sumatoria() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            @Override                    
+            public boolean hasNext() {
+                return ((structure.fila < n) && (structure.columna > 1));
+            }
+
+            @Override                    
+            public Estructura next() {
+                structure.fila += 1;
+                structure.columna -= 1;
+                return structure;
+            }                
+
+            @Override
+            public void sumatoria() {
+            int result = 0;
+            while(this.hasNext()){
+                result += structure.fila;
+                structure = this.next();
+            }
+            result += structure.fila;
+            System.out.println("Resultado Diagonal: " + result);
         }
     }
         
-            private class PorFilas implements IIterator<Estructura> {
+        private class PorFilas implements IIterator<Estructura> {
         
         public PorFilas() {               
         }
