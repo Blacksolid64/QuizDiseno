@@ -15,7 +15,7 @@ public class QuizIterator {
         int n = entrada.nextInt();
         
         Estructura nuevaEstructura = new Estructura(n);
-        IIterator iterador = nuevaEstructura.createIterator(Estructura.IteratorType.PorColumnas);
+        IIterator iterador = nuevaEstructura.createIterator(Estructura.IteratorType.FilasImpares);
         iterador.sumatoria();
         
         

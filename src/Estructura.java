@@ -35,9 +35,9 @@ public class Estructura implements IContainer<Estructura>{
             case UnaColumna:
                 return new UnaColumna(this);
             case FilasPares:
-                return new FilasPares();
+                return new FilasPares(this);
             case FilasImpares:
-                return new FilasImpares();
+                return new FilasImpares(this);
             case ColumnasPares:
                 return new ColumnasPares();
             case ColumnasImpares:
@@ -252,8 +252,7 @@ public class Estructura implements IContainer<Estructura>{
                         structure.fila = 1;
                     }
             }
-                                 
-        
+
             @Override                    
             public boolean hasNext() {                        
                 return ((structure.fila < structure.n));
@@ -282,46 +281,80 @@ public class Estructura implements IContainer<Estructura>{
         }
         
         private class FilasPares implements IIterator<Estructura> {
-        
-        public FilasPares() {               
+        Estructura structure;
+        public FilasPares(Estructura structure) {
+            this.structure = structure;
+            structure.fila = 1;
+            structure.columna = 1;
         }
                                  
         
         @Override                    
-        public boolean hasNext() {                        
-            return false;
+        public boolean hasNext() {
+            return (((structure.fila <= n) && (structure.columna <= n)));
         }
         
         @Override                    
         public Estructura next() {
-            return null;
+            if (structure.columna == n){
+                structure.fila += 1;
+                structure.columna = 1;
+            }
+            else{
+                structure.columna += 1;
+            }
+            return structure;
         }                
 
         @Override
         public void sumatoria() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            int resultado = 0;
+            while(this.hasNext()){
+                if ((structure.columna % 2) == 0) {
+                    resultado += structure.fila;
+                }
+                structure = this.next();
+            }
+            System.out.println("Resultado Pares: " + resultado);
         }
     }
         
         private class FilasImpares implements IIterator<Estructura> {
-        
-        public FilasImpares() {               
+            Estructura structure;
+        public FilasImpares(Estructura structure) {
+            this.structure = structure;
+            structure.fila = 1;
+            structure.columna = 1;
         }
                                  
         
         @Override                    
-        public boolean hasNext() {                        
-            return false;
+        public boolean hasNext() {
+            return (((structure.fila <= n) && (structure.columna <= n)));
         }
         
         @Override                    
         public Estructura next() {
-            return null;
+            if (structure.columna == n){
+                structure.fila += 1;
+                structure.columna = 1;
+            }
+            else{
+                structure.columna += 1;
+            }
+            return structure;
         }                
 
         @Override
         public void sumatoria() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            int resultado = 0;
+            while(this.hasNext()){
+                if ((structure.columna % 2) != 0) {
+                    resultado += structure.fila;
+                }
+                structure = this.next();
+            }
+            System.out.println("Resultado Pares: " + resultado);
         }
     }
         
