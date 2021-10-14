@@ -25,7 +25,7 @@ public class Estructura implements IContainer<Estructura>{
             case DiagonalInvertida:
                 return new DiagonalInvertida(this);
             case PorFilas:
-                return new PorFilas();
+                return new PorFilas(this);
             case PorColumnas:
                 return new PorColumnas();
             case UnaFila:
@@ -113,24 +113,40 @@ public class Estructura implements IContainer<Estructura>{
     }
         
         private class PorFilas implements IIterator<Estructura> {
-        
-        public PorFilas() {               
+        Estructura strcuture;
+
+        public PorFilas(Estructura structure) {
+            this.strcuture =  structure;
+            structure.fila = 1;
+            structure.columna = 1;
         }
                                  
         
         @Override                    
         public boolean hasNext() {                        
-            return false;
+            return (((strcuture.fila <= n) && (strcuture.columna <= n)));
         }
         
         @Override                    
         public Estructura next() {
-            return null;
+            if (strcuture.columna == n){
+                strcuture.fila += 1;
+                strcuture.columna = 1;
+            }
+            else{
+                strcuture.columna += 1;
+            }
+            return strcuture;
         }                
 
         @Override
         public void sumatoria() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            int resultado = 0;
+            while(this.hasNext()){
+                resultado += strcuture.columna;
+                strcuture = this.next();
+            }
+            System.out.println("Resultado Filas: " + resultado);
         }
     } 
             
