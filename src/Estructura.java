@@ -29,7 +29,7 @@ public class Estructura implements IContainer<Estructura>{
             case PorFilas:
                 return new PorFilas(this);
             case PorColumnas:
-                return new PorColumnas();
+                return new PorColumnas(this);
             case UnaFila:
                 return new UnaFila(this);
             case UnaColumna:
@@ -153,24 +153,40 @@ public class Estructura implements IContainer<Estructura>{
     } 
             
         private class PorColumnas implements IIterator<Estructura> {
-        
-        public PorColumnas() {               
+        Estructura strcuture;
+
+        public PorColumnas(Estructura strcuture) {
+            this.strcuture =  strcuture;
+            strcuture.fila = 1;
+            strcuture.columna = 1;
         }
                                  
         
         @Override                    
-        public boolean hasNext() {                        
-            return false;
+        public boolean hasNext() {
+            return (((strcuture.fila <= n) && (strcuture.columna <= n)));
         }
         
         @Override                    
         public Estructura next() {
-            return null;
+            if (strcuture.fila == n){
+                strcuture.columna += 1;
+                strcuture.fila = 1;
+            }
+            else{
+                strcuture.fila += 1;
+            }
+            return strcuture;
         }                
 
         @Override
         public void sumatoria() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            int resultado = 0;
+            while(this.hasNext()){
+                resultado += strcuture.fila;
+                strcuture = this.next();
+            }
+            System.out.println("Resultado Columnas: " + resultado);
         }
     }
         
