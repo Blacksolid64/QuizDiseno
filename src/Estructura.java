@@ -2,6 +2,8 @@
  */
 package quiziterator;
 
+import java.util.Scanner;
+
 public class Estructura implements IContainer<Estructura>{
     
     private int n;
@@ -29,9 +31,9 @@ public class Estructura implements IContainer<Estructura>{
             case PorColumnas:
                 return new PorColumnas();
             case UnaFila:
-                return new UnaFila();
+                return new UnaFila(this);
             case UnaColumna:
-                return new UnaColumna();
+                return new UnaColumna(this);
             case FilasPares:
                 return new FilasPares();
             case FilasImpares:
@@ -51,8 +53,8 @@ public class Estructura implements IContainer<Estructura>{
         
         public Diagonal(Estructura strcuture) {
             this.structure = strcuture;
-            structure.fila = 1;
-            structure.columna = 1;
+            this.structure.fila = 1;
+            this.structure.columna = 1;
         }
                                  
         @Override                    
@@ -84,8 +86,8 @@ public class Estructura implements IContainer<Estructura>{
             
             public DiagonalInvertida(Estructura structure) {
                 this.structure = structure;
-                structure.fila = 1;
-                structure.columna = structure.n;
+                this.structure.fila = 1;
+                this.structure.columna = this.structure.n;
             }
 
             @Override                    
@@ -108,46 +110,46 @@ public class Estructura implements IContainer<Estructura>{
                 structure = this.next();
             }
             result += structure.fila;
-            System.out.println("Resultado Diagonal: " + result);
+            System.out.println("Resultado Diagonal Invertida: " + result);
         }
     }
         
         private class PorFilas implements IIterator<Estructura> {
-        Estructura strcuture;
+            Estructura strcuture;
 
-        public PorFilas(Estructura structure) {
-            this.strcuture =  structure;
-            structure.fila = 1;
-            structure.columna = 1;
-        }
-                                 
-        
-        @Override                    
-        public boolean hasNext() {                        
-            return (((strcuture.fila <= n) && (strcuture.columna <= n)));
-        }
-        
-        @Override                    
-        public Estructura next() {
-            if (strcuture.columna == n){
-                strcuture.fila += 1;
-                strcuture.columna = 1;
+            public PorFilas(Estructura structure) {
+                this.strcuture =  structure;
+                structure.fila = 1;
+                structure.columna = 1;
             }
-            else{
-                strcuture.columna += 1;
-            }
-            return strcuture;
-        }                
 
-        @Override
-        public void sumatoria() {
-            int resultado = 0;
-            while(this.hasNext()){
-                resultado += strcuture.columna;
-                strcuture = this.next();
+
+            @Override                    
+            public boolean hasNext() {                        
+                return (((strcuture.fila <= n) && (strcuture.columna <= n)));
             }
-            System.out.println("Resultado Filas: " + resultado);
-        }
+
+            @Override                    
+            public Estructura next() {
+                if (strcuture.columna == n){
+                    strcuture.fila += 1;
+                    strcuture.columna = 1;
+                }
+                else{
+                    strcuture.columna += 1;
+                }
+                return strcuture;
+            }                
+
+            @Override
+            public void sumatoria() {
+                int resultado = 0;
+                while(this.hasNext()){
+                    resultado += strcuture.columna;
+                    strcuture = this.next();
+                }
+                System.out.println("Resultado Filas: " + resultado);
+            }
     } 
             
         private class PorColumnas implements IIterator<Estructura> {
@@ -173,48 +175,95 @@ public class Estructura implements IContainer<Estructura>{
     }
         
         private class UnaFila implements IIterator<Estructura> {
-        
-        public UnaFila() {               
-        }
-                                 
-        
-        @Override                    
-        public boolean hasNext() {                        
-            return false;
-        }
-        
-        @Override                    
-        public Estructura next() {
-            return null;
-        }                
+            Estructura structure;
+            
+            public UnaFila(Estructura structure) {
+                this.structure = structure;
+                Scanner entrada = new Scanner(System.in);
+                System.out.print("Ingrese la fila: ");
+                int f = entrada.nextInt();
+                
+                if(f > structure.n || f < 1){
+                    System.out.println("Número de fila no válido");
+                    this.structure.fila = -1; 
+                } else {
+                    this.structure.fila = f;
+                    structure.columna = 1;
+                }
+            }
 
-        @Override
-        public void sumatoria() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            @Override                    
+            public boolean hasNext() {                        
+                return ((structure.columna < structure.n));
+            }
+
+            @Override                    
+            public Estructura next() {
+                structure.columna += 1;
+                return structure;
+            }                
+
+            @Override
+            public void sumatoria() {
+                if(this.structure.fila == -1){
+                    System.out.println("");
+                } else {
+                    int result = 0;
+                    while(this.hasNext()){
+                        result += structure.fila;
+                        structure = this.next();
+                    }
+                    result += structure.fila;
+                    System.out.println("Resultado Fila " + structure.fila + ": " + result);
+                }    
+            }
         }
-    }
         
         private class UnaColumna implements IIterator<Estructura> {
-        
-        public UnaColumna() {               
-        }
+            Estructura structure;
+            
+            public UnaColumna(Estructura structure) {
+                    this.structure = structure;
+                    Scanner entrada = new Scanner(System.in);
+                    System.out.print("Ingrese la columna: ");
+                    int c = entrada.nextInt();
+
+                    if(c > structure.n || c < 1){
+                        System.out.println("Número de columna no válido");
+                        this.structure.columna = -1; 
+                    } else {
+                        this.structure.columna = c;
+                        structure.fila = 1;
+                    }
+            }
                                  
         
-        @Override                    
-        public boolean hasNext() {                        
-            return false;
-        }
-        
-        @Override                    
-        public Estructura next() {
-            return null;
-        }                
+            @Override                    
+            public boolean hasNext() {                        
+                return ((structure.fila < structure.n));
+            }
 
-        @Override
-        public void sumatoria() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            @Override                    
+            public Estructura next() {
+                structure.fila += 1;
+                return structure;
+            }                
+
+            @Override
+            public void sumatoria() {
+                if(this.structure.columna == -1){
+                    System.out.println("");
+                } else {
+                    int result = 0;
+                    while(this.hasNext()){
+                        result += structure.fila;
+                        structure = this.next();
+                    }
+                    result += structure.fila;
+                    System.out.println("Resultado Columna " + structure.columna + ": " + result);
+                }
+            }
         }
-    }
         
         private class FilasPares implements IIterator<Estructura> {
         
